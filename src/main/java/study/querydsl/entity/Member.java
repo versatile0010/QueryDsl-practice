@@ -1,9 +1,11 @@
 package study.querydsl.entity;
 
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
+@Slf4j
 @Entity
 @Getter
 @Setter
@@ -19,6 +21,15 @@ public class Member {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
+
+    //@OneToOne(mappedBy = "member", fetch = FetchType.LAZY, orphanRemoval = true)
+    //private MemberLog memberLog;
+
+    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "member_log_id", referencedColumnName = "member_log_id")
+    private MemberLog memberLog;
+
+
 
     public Member(String username) {
         this(username, 0);
@@ -39,5 +50,9 @@ public class Member {
     public void changeTeam(Team team) {
         this.team = team;
         team.getMembers().add(this);
+    }
+    public void addLog() {
+        log.info("[create member_log]");
+        this.memberLog = MemberLog.of(this);
     }
 }
