@@ -33,7 +33,8 @@ public class StorageService {
                         .build()
         );
 
-        // 파일 결로
+        // 파일 경로
+        // file path
         file.transferTo(new File(filePath));
 
         return "file uploaded successfully! filePath : " + filePath;
